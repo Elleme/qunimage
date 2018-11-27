@@ -1,6 +1,36 @@
-#include"circle.h"
+#include"Circle.h"
 #include<QDebug>
 #include<cmath>
+
+myCircle::myCircle()
+{
+
+}
+
+void myCircle::show_edit_func(QPainter * painter)    //显示编辑点
+{
+
+}
+
+void myCircle::draw_(QPainter * painter,QPoint centre,QPoint end) //每个图形进行绘制
+{
+
+}
+
+bool myCircle:: move_(QPainter *painter,int change_rx,int change_ry)
+{
+    return true;
+}
+
+bool myCircle::rotate_(QPainter *painter,QPoint end_pos)
+{
+    return true;
+}
+
+bool myCircle::resize_(QPainter *painter,QPoint end_pos,int num)
+{
+    return true;
+}
 
 void draw_circle_Bresenham(QPainter * painter,QPoint &centre,QPoint &end) //进行圆的绘制
 {

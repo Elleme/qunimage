@@ -176,8 +176,6 @@ bool myLine::rotate_(QPainter *painter,QPoint end_pos)
     return true;
 }
 
-
-
 bool myLine::resize_(QPainter *painter,QPoint end_pos,int num)
 {
     this->num_of_resizing = num; //为编辑的编号

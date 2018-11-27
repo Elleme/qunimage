@@ -30,19 +30,21 @@ SOURCES += \
         mainwindow.cpp \
     myopengl.cpp \
     mywidget.cpp \
-    circle.cpp \
-    line.cpp \
-    ellipse.cpp \
-    thepen.cpp
+    thepen.cpp \
+    Figure.cpp \
+    Line.cpp \
+    Ellipse.cpp \
+    Circle.cpp
 
 HEADERS += \
         mainwindow.h \
     myopengl.h \
     mywidget.h \
-    circle.h \
-    line.h \
-    ellipse.h \
-    thepen.h
+    thepen.h \
+    Figure.h \
+    Line.h \
+    Ellipse.h \
+    Circle.h
 
 FORMS += \
         mainwindow.ui

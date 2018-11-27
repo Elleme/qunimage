@@ -10,10 +10,8 @@
 #include<QPen>
 #include<QPixmap>
 #include<QtDebug>
+#include"Figure.h"
 
-enum type_draw{
-    none,thepen,line,circle,ellipse //一共四种图形
-};
 
 class myWidget : public QWidget
 {
@@ -39,6 +37,9 @@ public:
     void save_pixmap();
     QPixmap *getPixCopy();
 
+    //编辑
+    bool set_new_figure(Figure *& temp); //设置
+
 private:
     myopenGL*s;
     QVector<QPixmap*> draw_area; //用于撤销和清空
@@ -51,6 +52,12 @@ private:
     QPoint start_Pos; //开始点
     QPoint end_Pos; //结束点
 
+    //编辑操作，动态绑定
+    Figure * cur_figure;
+    bool is_editing;
+    int is_moving;
+    int is_rotating;
+    int is_resizing;
 signals:
 
 public slots:

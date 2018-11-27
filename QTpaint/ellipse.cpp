@@ -1,6 +1,36 @@
-#include "ellipse.h"
+#include "Ellipse.h"
 #include<cmath>
 #include<QDebug>
+
+myEllipse::myEllipse()
+{
+
+}
+void myEllipse::show_edit_func(QPainter * painter)  //显示编辑点
+{
+
+
+}
+void myEllipse::draw_(QPainter * painter,QPoint centre,QPoint end)//每个图形进行绘制
+{
+
+
+}
+
+bool myEllipse:: move_(QPainter *painter,int change_rx,int change_ry)
+{
+    return true;
+}
+
+bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
+{
+    return true;
+}
+
+bool myEllipse::resize_(QPainter *painter,QPoint end_pos,int num)
+{
+    return true;
+}
 
 void draw_point_of_ellipse(QPainter * painter, int x_centre,int y_centre,int x,int y)
 {
@@ -69,8 +99,6 @@ void draw_ellipse_one(QPainter * painter,QPoint &centre,QPoint &end)
           draw_point_of_ellipse(painter,x_centre,y_centre,x,y);
       }
 }
-
-
 
 void draw_ellipse_two(QPainter * painter,QPoint &centre,QPoint &end)
 {
