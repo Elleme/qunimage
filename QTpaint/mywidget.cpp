@@ -340,13 +340,13 @@ void myWidget:: my_paint (QPixmap *the_iamge){
             case circle:
             {
                 qDebug()<<"draw circle"<<endl;
-                draw_circle_Bresenham(painter,start_Pos,end_Pos);
+                this->cur_figure->draw_(painter,cur_figure->get_start_pos(),cur_figure->get_end_pos());
                 break;
             }
             case ellipse:
             {
                 qDebug()<<"drwa ellipse"<<endl;
-                draw_ellipse_one(painter,start_Pos,end_Pos);
+                this->cur_figure->draw_(painter,cur_figure->get_start_pos(),cur_figure->get_end_pos());
                 break;
             }
             default:

@@ -8,28 +8,26 @@ myEllipse::myEllipse()
 }
 void myEllipse::show_edit_func(QPainter * painter)  //显示编辑点
 {
-
-
-}
-void myEllipse::draw_(QPainter * painter,QPoint centre,QPoint end)//每个图形进行绘制
-{
-
-
-}
-
-bool myEllipse:: move_(QPainter *painter,int change_rx,int change_ry)
-{
-    return true;
-}
-
-bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
-{
-    return true;
-}
-
-bool myEllipse::resize_(QPainter *painter,QPoint end_pos,int num)
-{
-    return true;
+    qDebug()<<"show how to edit";
+    QPen pen;
+    pen.setWidth(10);					//设置画笔的线宽值
+    pen.setColor(Qt::blue);
+    painter->setPen(pen);//改变画笔的颜色
+    for(int i = 0; i <this->point_of_move.size();i++)
+    {
+        qDebug()<<"show how to edit1";
+        painter->drawPoint(point_of_move[i]);
+    }
+    for(int i = 0; i <this->point_of_resize.size();i++)
+    {
+        qDebug()<<"show how to edit2";
+        painter->drawPoint(point_of_resize[i]);
+    }
+    for(int i = 0; i <this->point_of_rotate.size();i++)
+    {
+        qDebug()<<"show how to edit3";
+        painter->drawPoint(point_of_rotate[i]);
+    }
 }
 
 void draw_point_of_ellipse(QPainter * painter, int x_centre,int y_centre,int x,int y)
@@ -45,7 +43,8 @@ void draw_point_of_ellipse(QPainter * painter, int x_centre,int y_centre,int x,i
     painter->drawPoint(temp4);
 }
 
-void draw_ellipse_one(QPainter * painter,QPoint &centre,QPoint &end)
+
+void myEllipse::draw_(QPainter * painter,QPoint centre,QPoint end)//每个图形进行绘制
 {
     //初始化坐标
     int x_centre = centre.rx();
@@ -98,55 +97,41 @@ void draw_ellipse_one(QPainter * painter,QPoint &centre,QPoint &end)
           y--;
           draw_point_of_ellipse(painter,x_centre,y_centre,x,y);
       }
+     //画完之后，开始进行特使编辑点的存放
+     point_of_move.clear(); //平移点
+     point_of_rotate.clear(); //旋转
+     point_of_resize.clear(); //实现编辑大小
+     //移动点move
+     this->point_of_move.push_back(this->point_begin); //设置圆心为中点
+     //编辑点resize，为四个点，以半径可以切线
+     QPoint resize_0(x_centre - r_x + 0.5,y_centre - r_y + 0.5);
+     QPoint resize_1(x_centre - r_x + 0.5,y_centre + r_y + 0.5);
+     QPoint resize_2(x_centre + r_x + 0.5,y_centre - r_y + 0.5);
+     QPoint resize_3(x_centre + r_x + 0.5,y_centre + r_y + 0.5);
+     this->point_of_resize.push_back(resize_0);
+     this->point_of_resize.push_back(resize_1);
+     this->point_of_resize.push_back(resize_2);
+     this->point_of_resize.push_back(resize_3);
+     //旋转，暂时不需要显示
+     this->point_of_rotate.clear(); //为空
 }
 
-void draw_ellipse_two(QPainter * painter,QPoint &centre,QPoint &end)
+bool myEllipse:: move_(QPainter *painter,int change_rx,int change_ry)
 {
-    //初始化坐标
-    int x_centre = centre.rx();
-    int y_centre = centre.ry();
-    int x_end = end.rx();
-    int y_end = end.ry();
-    //椭圆是以centre为中心开始创建的
-    int r_x = abs(x_end-x_centre);
-    int r_y = abs(y_end-y_centre);
-    int x = 0;
-    int y = r_y;
-    int sqa = r_x * r_x;
-    int sqb = r_y * r_y;
+    this->point_begin.rx() += change_rx;
+    this->point_begin.ry() += change_ry;
+    this->point_end.rx() += change_rx;
+    this->point_end.ry() += change_ry;
+    this->draw_(painter,this->point_begin,this->point_end);
+    return true;
+}
 
-    qDebug()<<"r_x"<<r_x<<endl;
-    qDebug()<<"r_y"<<r_y<<endl;
+bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
+{
+    return true;
+}
 
-    int d = 2 * sqb - 2 * r_y * sqa + sqa;
-    int P_x = int((double)sqa / sqrt((double)(sqa + sqb)));
-    while (x <= P_x)
-    {
-        if (d < 0)
-        {
-            d += 2 * sqb * (2 * x + 3);
-        }
-        else
-        {
-            d += 2 * sqb * (2 * x + 3) - 4 * sqa * (y - 1);
-            if(y>0) y--;
-        }
-        x++;
-        //四个象限
-         draw_point_of_ellipse(painter,x_centre,y_centre,x,y);
-    }
-    d = sqb * (x * x + x) + sqa * (y * y - y) - sqa * sqb;
-    while (y >= 0)
-    {
-    //四个象限
-    draw_point_of_ellipse(painter,x_centre,y_centre,x,y);
-    y--;
-    if (d < 0)
-    {
-        x++;
-        d = d - 2 * sqa * y - sqa + 2 * sqb * x + 2 * sqb;
-    }
-    else
-        d = d - 2 * sqa * y - sqa;
-    }
+bool myEllipse::resize_(QPainter *painter,QPoint end_pos,int num)
+{
+    return true;
 }

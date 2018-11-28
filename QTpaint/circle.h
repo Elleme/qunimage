@@ -12,6 +12,8 @@ public:
     bool move_(QPainter *painter,int change_rx,int change_ry);
     bool rotate_(QPainter *painter,QPoint end_pos);
     bool resize_(QPainter *painter,QPoint end_pos,int num);
+private:
+    double R; //半径
 };
 
 void draw_circle_Bresenham(QPainter * painter,QPoint &centre,QPoint &end);
