@@ -202,7 +202,11 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
              delete temp_pen_b;
              delete temp_pen_e;
          }
-         else
+         else if(type_of_draw == mulity) //多边形的画图
+         {
+
+         }
+         else //一次成型的图形
          {
             *temp_draw_area = *cur_draw_area;
             //对于不是thepen的图形来说，移动鼠标要分成三个部分来进行操作

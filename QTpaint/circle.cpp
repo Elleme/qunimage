@@ -80,14 +80,8 @@ void myCircle::draw_(QPainter * painter,QPoint centre,QPoint end) //每个图形
     //移动点move
     this->point_of_move.push_back(this->point_begin); //设置圆心为中点
     //编辑点resize，为四个点，以半径可以切线
-    QPoint resize_0(x_centre - R + 0.5,y_centre -R + 0.5);
-    QPoint resize_1(x_centre - R + 0.5,y_centre + R + 0.5);
-    QPoint resize_2(x_centre + R + 0.5,y_centre - R + 0.5);
-    QPoint resize_3(x_centre + R + 0.5,y_centre + R + 0.5);
+    QPoint resize_0(x_centre - R ,y_centre);
     this->point_of_resize.push_back(resize_0);
-    this->point_of_resize.push_back(resize_1);
-    this->point_of_resize.push_back(resize_2);
-    this->point_of_resize.push_back(resize_3);
     //旋转，暂时不需要显示
     this->point_of_rotate.clear(); //为空
 }
@@ -112,37 +106,9 @@ bool myCircle::resize_(QPainter *painter,QPoint end_pos,int num)
 {
     //获取点
     int t = num;
-    int nxt = -1;
     assert(t >= 0); //t一定是大于0的
-    //根据t的选取来确定编辑的点
-    if(t == 0)
-    {
-        nxt = 3;
-    }
-    else if(t == 1)
-    {
-        nxt = 2;
-    }
-    else if(t == 2)
-    {
-        nxt = 1;
-    }
-    else if(t == 3)
-    {
-        nxt = 0;
-    }
-    //确定不动的点
-    this->num_of_resizing =nxt; //无法移动
-    QPoint temp_fixed = this->point_of_resize[nxt];
-    qDebug()<<temp_fixed.rx()<<" "<<temp_fixed.ry();
-    //确定新的中心和半径
-    QPoint temp_center;
-    temp_center.rx()=( temp_fixed.rx() + end_pos.rx())/ 2 + 0.5;
-    temp_center.ry()=( temp_fixed.ry() + end_pos.ry())/ 2 + 0.5;
-    this->point_begin = temp_center;
-    this->R = double(abs(temp_center.rx()- temp_fixed.rx()));
-    QPoint end(temp_center.rx(), temp_center.ry() - R);
-    this->point_end = end;
+    this->point_end = end_pos;
+
     this->draw_(painter,this->point_begin,this->point_end);//画画
     return true;
 }

@@ -4,7 +4,7 @@
 #include<QPainter>
 
 enum type_draw{
-    none,thepen,line,circle,ellipse //一共四种图形
+    none,thepen,line,circle,ellipse,mulity //一共四种图形
 };
 
 class Figure

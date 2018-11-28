@@ -98,20 +98,15 @@ void myEllipse::draw_(QPainter * painter,QPoint centre,QPoint end)//每个图形
           draw_point_of_ellipse(painter,x_centre,y_centre,x,y);
       }
      //画完之后，开始进行特使编辑点的存放
+
      point_of_move.clear(); //平移点
      point_of_rotate.clear(); //旋转
      point_of_resize.clear(); //实现编辑大小
      //移动点move
      this->point_of_move.push_back(this->point_begin); //设置圆心为中点
      //编辑点resize，为四个点，以半径可以切线
-     QPoint resize_0(x_centre - r_x + 0.5,y_centre - r_y + 0.5);
-     QPoint resize_1(x_centre - r_x + 0.5,y_centre + r_y + 0.5);
-     QPoint resize_2(x_centre + r_x + 0.5,y_centre - r_y + 0.5);
-     QPoint resize_3(x_centre + r_x + 0.5,y_centre + r_y + 0.5);
+     QPoint resize_0(x_centre - r_x ,y_centre - r_y);
      this->point_of_resize.push_back(resize_0);
-     this->point_of_resize.push_back(resize_1);
-     this->point_of_resize.push_back(resize_2);
-     this->point_of_resize.push_back(resize_3);
      //旋转，暂时不需要显示
      this->point_of_rotate.clear(); //为空
 }
@@ -133,5 +128,9 @@ bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
 
 bool myEllipse::resize_(QPainter *painter,QPoint end_pos,int num)
 {
+    int t = num;
+    assert(t >= 0); //t一定是大于0的
+    this->point_end = end_pos;
+    this->draw_(painter,this->point_begin,this->point_end);//画画
     return true;
 }
