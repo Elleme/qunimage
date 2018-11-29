@@ -4,6 +4,8 @@
 myPloygon::myPloygon()
 {
     this->type_of_figure = polygon;
+    this->rotate_angle = 0; //一开始的弧度为0
+    this->is_rotating = false;
 }
 
 void myPloygon::draw_line(QPainter * painter,QPoint begin,QPoint end)//每个图形进行绘制
@@ -95,15 +97,23 @@ void myPloygon:: draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形
         draw_line(painter,this->set_of_point[i],this->set_of_point[i+1]); //两两之间画直线
     }
     //确定外接矩形
-    this->set_x_y_min_max(); //设置最小值和最大值
+    this->set_x_y_min_max();//设置最小值和最大值
 
-    point_of_move.clear(); //平移点
-    point_of_rotate.clear(); //旋转
     point_of_resize.clear(); //实现编辑大小
-
     this->point_of_resize = this->set_of_point; //可编辑的点就是这个点
-    QPoint center_temp((this->x_max + this->x_min)/2 + 0.5,(this->y_max + this->y_min)/2 + 0.5);
-    this->point_of_move.push_back(center_temp); //可移动的点
+
+    if(is_rotating == false) //如果旋转则不需要改变
+    {
+        point_of_move.clear(); //平移点
+        point_of_rotate.clear(); //旋转
+        QPoint center_temp((this->x_max + this->x_min)/2 + 0.5,(this->y_max + this->y_min)/2 + 0.5);
+        this->point_center = center_temp; //确定中心点
+        this->point_of_move.push_back(center_temp); //可移动的点
+        //重点，设置旋转点，根据角度来进行计算
+        QPoint rotate_temp(center_temp.rx(),center_temp.ry() - (y_max-y_min)/8);    //旋转点就是center_temp 1/4y上的点
+        this->change_point_by_angle(rotate_temp,sin(this->rotate_angle),cos(this->rotate_angle));
+        this->point_of_rotate.push_back(rotate_temp);
+    }
 }
 
 bool myPloygon:: move_(QPainter *painter,int change_rx,int change_ry)
@@ -125,9 +135,93 @@ bool myPloygon:: move_(QPainter *painter,int change_rx,int change_ry)
     return true;
 }
 
+void myPloygon::change_point_by_angle(QPoint &t, double sina,double cosa)
+{
+    QPoint temp_center = this->point_center;
+    QPoint t_end = t;
+    t.rx() = (t_end.rx()-temp_center.rx() ) * cosa - (t_end.ry() -temp_center.ry()) *sina + temp_center.rx()+ 0.5;
+    t.ry() =  (t_end.rx()-temp_center.rx() ) * sina + (t_end.ry() -temp_center.ry()) *cosa + temp_center.ry()+ 0.5;
+}
+
 bool myPloygon:: rotate_(QPainter *painter,QPoint end_pos)
 {
-
+    this->is_rotating = true; //是正在旋转
+    //获取旋转角
+    QPoint temp_center = this->point_center;
+    QPoint temp_begin = this->point_of_rotate[0]; //开始旋转的点
+    //根据三角型公式来求a的值
+    double AB2 = get_2_distance(temp_center,temp_begin);
+    double AC2 = get_2_distance(temp_center,end_pos);
+    double BC2 = get_2_distance(temp_begin,end_pos); //
+    double sina,cosa; //a的值为0到pi
+    cosa = (AB2 + AC2 - BC2)/(2 * sqrt(AB2*AC2)); //得到cosa的值
+    sina = sqrt(1 - cosa * cosa); //得到sina的值
+    qDebug()<<sina<<" "<<cosa;
+    //判断是否是正旋转还是负旋转
+    if(temp_begin.rx() == temp_center.rx()) //可以知道两个点是一条直线上的，则我们可以知道斜率不存在
+    {
+        if(temp_begin.ry() > temp_center.ry()) //负旋转
+        {
+            if(end_pos.rx() < temp_begin.rx())
+            {
+                sina = -sina; //为负
+            }
+        }
+        else
+        {
+            if(end_pos.rx() > temp_begin.rx())
+            {
+                sina = -sina; //为负
+            }
+        }
+    }
+    else
+    {
+        double k = double(temp_begin.ry()-temp_center.ry())/(temp_begin.rx()-temp_center.rx());//算出斜率
+        if(end_pos.ry()- k * (end_pos.rx() - temp_center.rx()) - temp_center.ry() > 0) //在直线的下方
+        {
+            if(temp_begin.rx() < temp_center.rx())
+            {
+                sina = - sina;
+            }
+        }
+        else if(end_pos.ry()- k * (end_pos.rx() - temp_center.rx()) + temp_center.ry()  > 0) //上方
+        {
+            if(temp_begin.rx() > temp_center.rx())
+            {
+                sina = - sina;
+            }
+        }
+    }
+    //根据旋转的弧度得出最后偏移的弧度，得出旋转后的旋转点
+    double dealt_angle = acos(cosa); //求出cosa
+    if(sina >0) //正向旋转
+    {
+        this->rotate_angle += dealt_angle;
+        if(sin(rotate_angle) < 0) //大于180
+        {
+            this->rotate_angle = this->rotate_angle -  M_PI;
+        }
+    }
+    else //逆向旋转
+    {
+        this->rotate_angle -= dealt_angle;
+        if(sin(rotate_angle) > 0) //负超过180
+        {
+            this->rotate_angle = this->rotate_angle +  M_PI;
+        }
+    }
+    //根据旋转角得出关键坐标
+    this->change_point_by_angle(this->point_begin,sina,cosa);
+    this->change_point_by_angle(this->point_end,sina,cosa);
+    for(int i = 0; i < this->set_of_point.size();i++)
+    {
+        this->change_point_by_angle(this->set_of_point[i],sina,cosa);
+    }
+    this->change_point_by_angle(this->point_of_rotate[0],sina,cosa); //改变旋转点，但是中心点不改变
+    this->draw_(painter,this->point_begin,this->point_end);
+    is_rotating = false; //结束旋转
+    return true;
 }
 
 bool myPloygon:: resize_(QPainter *painter,QPoint end_pos,int num)
@@ -154,7 +248,6 @@ void myPloygon:: set_x_y_min_max()
     {
         return;
     }
-    qDebug()<<"???";
     assert(this->set_of_point.size() >= 2); //点集一定是大于二的
     this->x_min = set_of_point[0].rx();
     this->x_max = set_of_point[0].rx();

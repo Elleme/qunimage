@@ -151,3 +151,11 @@ bool  Figure:: is_polyon_finished()
     }
     return false;
 }
+
+double  Figure::get_2_distance(QPoint a,QPoint b) //获取两个点的坐标的距离平方
+{
+    int dx = a.rx()-b.rx();
+    int dy = a.ry()- b.ry();
+    double dis2 =  dx * dx + dy * dy;
+    return dis2;
+}

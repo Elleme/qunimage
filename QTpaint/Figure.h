@@ -23,6 +23,7 @@ public:
     int num_of_set();        //判断多边形点集是否为空
     int is_ready_to();       //判断多边形是否
     bool is_polyon_finished();
+    double get_2_distance(QPoint a,QPoint b); //获取两个点的坐标的距离平方
     //虚拟函数，展示继承类相应的属性
     virtual void show_edit_func(QPainter * painter) = 0;     //显示编辑点
     virtual void draw_(QPainter * painter,QPoint centre,QPoint end) = 0; //每个图形进行绘制
