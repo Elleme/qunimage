@@ -29,6 +29,7 @@ public:
     void set_type_to_rectangle();
     void set_type_to_circle();
     void set_type_to_ellipse();
+    void set_type_to_polygon();
     void my_paint (QPixmap *the_iamge); //画图
     void set_draw_area_back(); //撤销
     void set_draw_area_clear();//清屏
@@ -58,6 +59,7 @@ private:
     int is_moving;
     int is_rotating;
     int is_resizing;
+    bool is_polygon; //给多边形额外的参数
 signals:
 
 public slots:

@@ -4,7 +4,7 @@
 #include<QPainter>
 
 enum type_draw{
-    none,thepen,line,circle,ellipse,mulity //一共四种图形
+    none,thepen,line,circle,ellipse,polygon //一共五种图形
 };
 
 class Figure
@@ -18,6 +18,11 @@ public:
     int is_to_resize(QPoint temp); //重新编辑大小
     QPoint get_start_pos();
     QPoint get_end_pos();
+    bool is_polyon_to(QPoint &t); //判断多边形是否为空
+    void add_into_set(QPoint t); //将点加入点集
+    int num_of_set();        //判断多边形点集是否为空
+    int is_ready_to();       //判断多边形是否
+    bool is_polyon_finished();
     //虚拟函数，展示继承类相应的属性
     virtual void show_edit_func(QPainter * painter) = 0;     //显示编辑点
     virtual void draw_(QPainter * painter,QPoint centre,QPoint end) = 0; //每个图形进行绘制
@@ -34,6 +39,8 @@ protected:
     QVector<QPoint> point_of_resize; //实现编辑大小
     type_draw type_of_figure;
     int num_of_resizing; //编辑功能，保证不改变点
+    QVector<QPoint> set_of_point; //只能够在编辑多边形的时候进行输入
+    bool finished; //用来保证多边形的裁剪算法
 };
 
 #endif // FIGURE_H

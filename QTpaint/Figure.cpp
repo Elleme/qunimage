@@ -1,12 +1,29 @@
 #include "Figure.h"
-
+#include"QDebug.h"
 Figure::Figure()
 {
     point_of_move.clear(); //平移点
     point_of_rotate.clear(); //旋转
     point_of_resize.clear(); //实现编辑大小
+    this->set_of_point.clear(); //多边形进行清空
     type_of_figure = none; //设置成无图形属性
     num_of_resizing = -1;
+    this->finished = false; //为空
+}
+
+bool is_near(QPoint t,QPoint dest)
+{
+    double dx =  t.rx() - dest.rx() ;
+    double dy =  t.ry() - dest.ry() ;
+    double d = dx*dx + dy * dy;
+    if(d <= 25)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void Figure::set_begin_point(QPoint begin) //设置开始点坐标
@@ -17,6 +34,15 @@ void Figure::set_begin_point(QPoint begin) //设置开始点坐标
 void Figure::set_end_point(QPoint end)//设置结束点的坐标
 {
     this->point_end = end;
+    if(this->type_of_figure == polygon) //多边形
+    {
+        int t = (int)this->set_of_point.size() - 1;
+        if(t > 0)
+        {
+            this->set_of_point[t] = end; //改变最后一个点
+            qDebug()<<"change last point";
+        }
+    }
 }
 
 bool catch_the_point(QPoint &a,QPoint &b)
@@ -75,4 +101,50 @@ QPoint  Figure:: get_start_pos()
 QPoint  Figure::get_end_pos()
 {
     return  this->point_end;
+}
+
+
+bool Figure::is_polyon_to(QPoint &t) //判断多边形是否为空
+{
+    if(this->set_of_point.empty() == true) //没有点
+    {
+        return true;
+    }
+    else
+    {
+         if(is_near(t,set_of_point[0]) == true)
+         {
+             t = set_of_point[0]; //改变最后一个定点
+             return false;
+         }
+         else
+             return  true;
+    }
+}
+
+void Figure::add_into_set(QPoint t)
+{
+    qDebug()<<"add into set"<<this->set_of_point.size();
+    this->set_of_point.push_back(t);
+    this->point_of_resize.push_back(t);
+    qDebug()<<"after add into set"<<this->set_of_point.size();
+}
+
+int Figure::num_of_set()
+{
+    return this->set_of_point.size(); //返回为真
+}
+
+bool  Figure:: is_polyon_finished()
+{
+    assert(this->set_of_point.size() >= 2); //为大小
+    QPoint t = this->set_of_point.back(); //最后一个元素
+    if(is_near(t,this->set_of_point[0]) == true)        //如果相同
+    {
+        t  = this->set_of_point[0];
+        this->set_of_point.pop_back();
+        this->set_of_point.push_back(t);
+        return true;
+    }
+    return false;
 }

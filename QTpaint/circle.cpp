@@ -4,6 +4,7 @@
 
 myCircle::myCircle()
 {
+    this->type_of_figure = circle;
     this->R  = -1;
 }
 

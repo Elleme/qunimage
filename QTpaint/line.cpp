@@ -5,8 +5,9 @@
 
 myLine::myLine()
 {
-
+    this->type_of_figure = line;
 }
+
 void myLine::show_edit_func(QPainter * painter)  //显示编辑点
 {
     qDebug()<<"show how to edit";

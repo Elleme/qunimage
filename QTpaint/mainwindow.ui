@@ -62,7 +62,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>110</y>
+       <y>60</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -75,7 +75,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>170</y>
+       <y>110</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -88,7 +88,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>230</y>
+       <y>160</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -101,7 +101,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>50</y>
+       <y>10</y>
        <width>93</width>
        <height>28</height>
       </rect>
@@ -262,6 +262,19 @@
        <string>purple</string>
       </property>
      </item>
+    </widget>
+    <widget class="QPushButton" name="polygon">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>210</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>多边形</string>
+     </property>
     </widget>
    </widget>
   </widget>

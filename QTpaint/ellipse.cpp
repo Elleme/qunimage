@@ -4,8 +4,9 @@
 
 myEllipse::myEllipse()
 {
-
+        this->type_of_figure = ellipse;
 }
+
 void myEllipse::show_edit_func(QPainter * painter)  //显示编辑点
 {
     qDebug()<<"show how to edit";

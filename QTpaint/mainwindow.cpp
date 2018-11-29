@@ -65,6 +65,12 @@ void MainWindow::on_ellipse_clicked()//画椭圆
     cur_widget->set_type_to_ellipse();
 }
 
+void MainWindow::on_polygon_clicked()
+{
+    qDebug()<<"pick polygon"<<endl;
+    cur_widget->set_type_to_polygon();
+}
+
 void MainWindow::on_actions_T_triggered()
 {
      myWidget *draw_ = new myWidget;
@@ -102,3 +108,5 @@ void MainWindow::on_action_S_triggered()
 {
     cur_widget->save_pixmap();
 }
+
+

@@ -48,6 +48,8 @@ private slots:
 
     void on_action_S_triggered();
 
+    void on_polygon_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<myWidget*> draw_widget; //设置一个画板
