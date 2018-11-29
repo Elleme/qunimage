@@ -195,7 +195,7 @@ bool myLine::resize_(QPainter *painter,QPoint end_pos,int num)
     this->point_begin = change_start_pos;
     this->point_end = end_pos; //改变起始坐标和终点坐标
     this->draw_(painter,this->point_begin,this->point_end);
-     this->num_of_resizing =  -1;
+    this->num_of_resizing =  -1;
     return true;
 }
 

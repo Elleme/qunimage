@@ -30,12 +30,14 @@ public:
     void set_type_to_circle();
     void set_type_to_ellipse();
     void set_type_to_polygon();
+    void set_type_to_fillcolor();
     void my_paint (QPixmap *the_iamge); //画图
     void set_draw_area_back(); //撤销
     void set_draw_area_clear();//清屏
     void set_pen_width(int i);//设置笔长
     void set_pen_color(QString i);//设置笔的颜色
     void save_pixmap();
+    void fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t);
     QPixmap *getPixCopy();
 
     //编辑
@@ -60,6 +62,12 @@ private:
     int is_rotating;
     int is_resizing;
     bool is_polygon; //给多边形额外的参数
+
+    //填充需要的变量
+    QPoint fill_start_pos;
+    QImage cur_image;//填充的image
+    QColor pcolor; //填充的颜色
+    bool **is_procced; //是否处理过
 signals:
 
 public slots:

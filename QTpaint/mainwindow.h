@@ -50,6 +50,8 @@ private slots:
 
     void on_polygon_clicked();
 
+    void on_fillcolor_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<myWidget*> draw_widget; //设置一个画板

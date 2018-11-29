@@ -137,7 +137,10 @@ int Figure::num_of_set()
 
 bool  Figure:: is_polyon_finished()
 {
-    assert(this->set_of_point.size() >= 2); //为大小
+    if(this->set_of_point.size()<2)
+    {
+        return false;
+    }
     QPoint t = this->set_of_point.back(); //最后一个元素
     if(is_near(t,this->set_of_point[0]) == true)        //如果相同
     {

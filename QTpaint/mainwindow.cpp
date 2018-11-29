@@ -81,6 +81,10 @@ void MainWindow::on_actions_T_triggered()
 }
 
 
+void MainWindow::on_fillcolor_clicked()
+{
+    cur_widget->set_type_to_fillcolor();
+}
 
 void MainWindow::on_to_back_clicked() //撤销
 {

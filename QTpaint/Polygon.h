@@ -13,6 +13,7 @@ public:
     bool rotate_(QPainter *painter,QPoint end_pos);
     bool resize_(QPainter *painter,QPoint end_pos,int num);
     void push_into_Ploygon(QPoint t);
+    void set_x_y_min_max();
 private:
     void draw_line(QPainter * painter,QPoint begin,QPoint end);
     int x_min;

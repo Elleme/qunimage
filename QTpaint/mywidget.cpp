@@ -6,6 +6,7 @@
 #include"Ellipse.h"
 #include"Polygon.h"
 #include <QCursor>
+#include <QStack>
 
 myWidget::myWidget(QWidget *parent) : QWidget(parent)
 {
@@ -35,6 +36,7 @@ myWidget::myWidget(QWidget *parent) : QWidget(parent)
       is_moving = -1;       //标志位设置成-1表示无操作
       is_rotating = -1;
       is_resizing = -1;
+      is_procced = nullptr;
 }
 
 void myWidget::set_type_to_pen()//设置为笔
@@ -71,6 +73,12 @@ void myWidget::set_type_to_polygon()//设置为多边形
 {
     draw_or_not = true;
     type_of_draw = polygon;
+}
+
+void myWidget::set_type_to_fillcolor()
+{
+    draw_or_not = true;
+    type_of_draw = fillcolor;
 }
 
 bool  myWidget::set_new_figure(Figure *& temp)//构造新的图形
@@ -141,6 +149,20 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
             qDebug()<<"begin using pen";
             is_drawing = true;
         }
+        else if(type_of_draw == fillcolor) //实现填充算法
+        {
+            start_Pos = e->pos();
+            is_drawing = true;
+            is_editing = true;
+            this->cur_image = this->cur_draw_area->toImage(); //转化为QIMAGE实现填充
+            this->fill_start_pos.rx() = start_Pos.rx();
+            this->fill_start_pos.ry() = start_Pos.ry(); //设置点
+            this->pcolor = this->cur_image.pixelColor(e->pos().x(),e->pos().y());   //得到Press点的信息
+            qDebug()<< pcolor <<endl;
+            my_paint(cur_draw_area);//在当前图片上直接进行绘图
+            QPixmap *temp = getPixCopy();
+            draw_area.push_back(temp);//保存下
+        }
         else if(is_drawing == false && is_editing == false) //进行绘图
         {
             start_Pos = e->pos(); //记录下开始的点的位置
@@ -177,6 +199,8 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
                 {
                     cur_figure->add_into_set(start_Pos);  //最后一个点
                     qDebug()<<"begin to edit";
+                    *temp_draw_area = *cur_draw_area;
+                     my_paint(temp_draw_area);
                     is_drawing = false;
                     is_editing = true;                      //进入编辑模式
                 }
@@ -227,6 +251,8 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
             {
                 cur_figure->add_into_set(start_Pos);
                 qDebug()<<"begin to edit";
+                *temp_draw_area = *cur_draw_area;
+                 my_paint(temp_draw_area);
                 is_drawing = false;
                 is_editing = true;                      //进入编辑模式
             }
@@ -251,14 +277,16 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
          else if(type_of_draw == thepen) //进行画笔操作
          {
              qDebug()<<"use pen";
-             type_of_draw = line;
+             type_of_draw = thepen;
              start_Pos = *temp_pen_e;
              my_paint(cur_draw_area);
-
-             type_of_draw = thepen;
              start_Pos = *temp_pen_b;
              delete temp_pen_b;
              delete temp_pen_e;
+         }
+         else if(type_of_draw == fillcolor) //为填充
+         {
+             qDebug()<<"do nothing";//什么也不做
          }
          else //图形
          {
@@ -348,6 +376,15 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
         is_editing = false;
         cur_figure = nullptr;
     }
+    else if(type_of_draw == fillcolor) //填充
+    {
+        if(is_drawing == true && is_editing == true)
+        {
+            is_drawing = false;
+            is_editing = false;
+            update();
+        }
+    }
     else if(type_of_draw == polygon) //多边形
     {
         //判断是否完成画图
@@ -361,6 +398,15 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
                 is_drawing = false;
                 is_editing = true;
             }
+            if(is_editing == true)
+             {
+                 qDebug()<<"end of editing";
+                 QPainter *painter = new QPainter;		//新建一个QPainter对象
+                 painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
+                 painter->setPen(pen);        			//将QPen对象应用到绘制对象中
+                 cur_figure->show_edit_func(painter); //利用这个函数来进行对与编辑窗口的展示
+                 update();
+             }
         }
     }
     else if(is_drawing == true) //绘画结束
@@ -448,6 +494,12 @@ void myWidget:: my_paint (QPixmap *the_iamge){
                 this->cur_figure->draw_(painter,cur_figure->get_start_pos(),cur_figure->get_end_pos());
                 break;
             }
+            case fillcolor:
+            {
+                    qDebug()<<"drwa fillcolor"<<endl;
+                    this->fillColor(&this->cur_image,this->pcolor,painter,this->fill_start_pos);
+                    break;
+            }
             default:
             {
                 qDebug()<<"none"<<endl;
@@ -461,7 +513,7 @@ void myWidget:: my_paint (QPixmap *the_iamge){
             cur_figure->show_edit_func(painter);
         }
     }
-    else if(this->is_editing == true)
+    else if(this->is_editing == true && type_of_draw != fillcolor)
     {
         cur_figure->show_edit_func(painter);
     }
@@ -518,3 +570,44 @@ void myWidget::set_pen_color(QString i)//设置笔的颜色
      qDebug()<<"save";
      cur_draw_area->save("C:/Users/dell/Desktop/1.png","PNG");
  }
+
+void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t)//实现填充算法
+{
+    QStack<QPoint> *stack = new QStack<QPoint>;
+    stack->clear();
+    int maxWidth = this->cur_draw_area->width()-1;
+    int maxHeight = this->cur_draw_area->height()-1;
+    bool **point_used = new bool*[maxWidth];
+    for(int i=0;i<maxWidth;i++)
+    {
+        point_used[i] = new bool[maxHeight];
+    }
+    for(int i=0;i<maxWidth;i++)
+    {
+        for(int j=0;j<maxHeight;j++)
+        {
+            point_used[i][j] = false;
+        }
+    }
+    this->is_procced = point_used;
+    stack->push(t);    //要填充的press的那个点
+    while(!stack->empty()) //当栈不为0的时候
+    {
+        QPoint p = stack->pop();
+        int x = p.x();
+        int y = p.y();
+
+        if(img->pixelColor(x,y) != backcolor) continue;   //边界
+        if(this->is_procced[x][y] == true) continue;      //已经上色
+        if(x<=0 || x>=this->cur_draw_area->width()-2) continue;     //超限
+        if(y<=0 || y>=this->cur_draw_area->height()-2) continue;    //超限
+
+        this->is_procced[x][y] = true;
+        painter->drawPoint(x,y);
+        if(!this->is_procced[x][y+1]) stack->push(QPoint(x,y+1));
+        if(!this->is_procced[x][y-1]) stack->push(QPoint(x,y-1));
+        if(!this->is_procced[x-1][y]) stack->push(QPoint(x-1,y));
+        if(!this->is_procced[x+1][y]) stack->push(QPoint(x+1,y));
+    }
+    stack->clear();
+}
