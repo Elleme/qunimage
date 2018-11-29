@@ -200,7 +200,7 @@ bool myPloygon:: rotate_(QPainter *painter,QPoint end_pos)
         this->rotate_angle += dealt_angle;
         if(sin(rotate_angle) < 0) //大于180
         {
-            this->rotate_angle = this->rotate_angle -  M_PI;
+            this->rotate_angle = this->rotate_angle - 2 * M_PI;
         }
     }
     else //逆向旋转
@@ -208,7 +208,7 @@ bool myPloygon:: rotate_(QPainter *painter,QPoint end_pos)
         this->rotate_angle -= dealt_angle;
         if(sin(rotate_angle) > 0) //负超过180
         {
-            this->rotate_angle = this->rotate_angle +  M_PI;
+            this->rotate_angle = this->rotate_angle + 2 * M_PI;
         }
     }
     //根据旋转角得出关键坐标

@@ -254,7 +254,7 @@ bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
         this->rotate_angle += dealt_angle;
         if(sin(rotate_angle) < 0) //大于180
         {
-            this->rotate_angle = this->rotate_angle -  M_PI;
+            this->rotate_angle = this->rotate_angle -  2 * M_PI;
         }
     }
     else //逆向旋转
@@ -262,25 +262,25 @@ bool myEllipse::rotate_(QPainter *painter,QPoint end_pos)
         this->rotate_angle -= dealt_angle;
         if(sin(rotate_angle) > 0) //负超过180
         {
-            this->rotate_angle = this->rotate_angle +  M_PI;
+            this->rotate_angle = this->rotate_angle +  2 * M_PI;
         }
     }
     //得出旋转角，结束绘制图像
-    sina = sin(this->rotate_angle);
-    cosa = cos(this->rotate_angle);
+    double sinb = sin(this->rotate_angle);
+    double cosb = cos(this->rotate_angle);
     for(int i = 0; i < this->point_of_resize.size(); i++)
     {
         QPoint temp_center = this->point_center;
         QPoint t_end = fixed_point_of_resize[i];
-        point_of_resize[i].rx() = (t_end.rx()-temp_center.rx() ) * cosa - (t_end.ry() -temp_center.ry()) *sina + temp_center.rx()+ 0.5;
-        point_of_resize[i].ry() = (t_end.rx()-temp_center.rx() ) * sina + (t_end.ry() -temp_center.ry()) *cosa + temp_center.ry()+ 0.5;
+        point_of_resize[i].rx() = (t_end.rx()-temp_center.rx() ) * cosb - (t_end.ry() -temp_center.ry()) *sinb + temp_center.rx()+ 0.5;
+        point_of_resize[i].ry() = (t_end.rx()-temp_center.rx() ) * sinb + (t_end.ry() -temp_center.ry()) *cosb + temp_center.ry()+ 0.5;
     }
     for(int i = 0; i < this->point_of_rotate.size(); i++)
     {
         QPoint temp_center = this->point_center;
         QPoint t_end = fixed_point_of_rotate[i];
-        point_of_rotate[i].rx() = (t_end.rx()-temp_center.rx() ) * cosa - (t_end.ry() -temp_center.ry()) *sina + temp_center.rx()+ 0.5;
-        point_of_rotate[i].ry() = (t_end.rx()-temp_center.rx() ) * sina + (t_end.ry() -temp_center.ry()) *cosa + temp_center.ry()+ 0.5;
+        point_of_rotate[i].rx() = (t_end.rx()-temp_center.rx() ) * cosb - (t_end.ry() -temp_center.ry()) *sinb + temp_center.rx()+ 0.5;
+        point_of_rotate[i].ry() = (t_end.rx()-temp_center.rx() ) * sinb + (t_end.ry() -temp_center.ry()) *cosb + temp_center.ry()+ 0.5;
     }
     this->draw_(painter,this->point_begin,this->point_end);
     is_rotating = false; //结束旋转
@@ -308,8 +308,7 @@ bool myEllipse::resize_(QPainter *painter,QPoint end_pos,int num) //重写resize
     //编辑点resize
     int r_x = abs(this->point_center.rx()-this->point_end.rx());
     int r_y = abs(this->point_center.ry()-this->point_end.ry());
-    QPoint resize_0(this->point_center.rx() - r_x ,this->point_center.ry() - r_y);
-    this->fixed_point_of_resize.push_back(resize_0);
+    this->fixed_point_of_resize.push_back(end_pos);
     QPoint rotate_0(this->point_center.rx(),this->point_center.ry() - (r_y)/2); //改变椭圆的旋转点
     this->fixed_point_of_rotate.push_back(rotate_0);
     this->point_of_move  = this->fixed_point_of_move;
