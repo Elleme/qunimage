@@ -4,7 +4,7 @@
 #include<QPainter>
 
 enum type_draw{
-    none,fillcolor,thepen,line,circle,ellipse,polygon //一共五种图形，增加一个填充功能
+    none,fillcolor,thepen,line,circle,ellipse,polygon,Bezier //一共五种图形，增加一个填充功能，
 };
 
 class Figure
@@ -24,6 +24,7 @@ public:
     int is_ready_to();       //判断多边形是否
     bool is_polyon_finished();
     double get_2_distance(QPoint a,QPoint b); //获取两个点的坐标的距离平方
+    void set_Bezier_finished(bool t);
     //虚拟函数，展示继承类相应的属性
     virtual void show_edit_func(QPainter * painter) = 0;     //显示编辑点
     virtual void draw_(QPainter * painter,QPoint centre,QPoint end) = 0; //每个图形进行绘制
@@ -42,6 +43,7 @@ protected:
     int num_of_resizing; //编辑功能，保证不改变点
     QVector<QPoint> set_of_point; //只能够在编辑多边形的时候进行输入
     bool finished; //用来保证多边形的裁剪算法
+    bool Bezier_finished;
 };
 
 #endif // FIGURE_H

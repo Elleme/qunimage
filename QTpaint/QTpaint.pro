@@ -34,7 +34,8 @@ SOURCES += \
     Line.cpp \
     Ellipse.cpp \
     Circle.cpp \
-    Ploygon.cpp
+    Ploygon.cpp \
+    Bezier.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
     Line.h \
     Ellipse.h \
     Circle.h \
-    Polygon.h
+    Polygon.h \
+    Bezier.h
 
 FORMS += \
         mainwindow.ui

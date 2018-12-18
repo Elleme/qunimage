@@ -46,17 +46,14 @@ void myPloygon:: show_edit_func(QPainter * painter)     //显示编辑点
     painter->setPen(pen);//改变画笔的颜色
     for(int i = 0; i <this->point_of_move.size();i++)
     {
-        qDebug()<<"show how to edit1";
         painter->drawPoint(point_of_move[i]);
     }
     for(int i = 0; i <this->point_of_resize.size();i++)
     {
-        qDebug()<<"show how to edit2";
         painter->drawPoint(point_of_resize[i]);
     }
     for(int i = 0; i <this->point_of_rotate.size();i++)
     {
-        qDebug()<<"show how to edit3";
         painter->drawPoint(point_of_rotate[i]);
     }
 

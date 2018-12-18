@@ -26,6 +26,11 @@ bool is_near(QPoint t,QPoint dest)
     }
 }
 
+void Figure::set_Bezier_finished(bool t)
+{
+      this->Bezier_finished = t; //是true还是false
+}
+
 void Figure::set_begin_point(QPoint begin) //设置开始点坐标
 {
     this->point_begin = begin;
@@ -34,7 +39,7 @@ void Figure::set_begin_point(QPoint begin) //设置开始点坐标
 void Figure::set_end_point(QPoint end)//设置结束点的坐标
 {
     this->point_end = end;
-    if(this->type_of_figure == polygon) //多边形
+    if(this->type_of_figure == polygon || this->type_of_figure == Bezier) //多边形
     {
         int t = (int)this->set_of_point.size() - 1;
         if(t > 0)

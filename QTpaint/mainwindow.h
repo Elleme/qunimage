@@ -52,6 +52,8 @@ private slots:
 
     void on_fillcolor_clicked();
 
+    void on_Bezier_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<myWidget*> draw_widget; //设置一个画板

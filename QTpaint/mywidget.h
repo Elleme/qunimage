@@ -31,6 +31,7 @@ public:
     void set_type_to_ellipse();
     void set_type_to_polygon();
     void set_type_to_fillcolor();
+    void set_type_to_Bezier(); //实现曲线
     void my_paint (QPixmap *the_iamge); //画图
     void set_draw_area_back(); //撤销
     void set_draw_area_clear();//清屏
@@ -39,7 +40,7 @@ public:
     void save_pixmap();
     void fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t);
     QPixmap *getPixCopy();
-
+    void closeEvent(QCloseEvent *e);
     //编辑
     bool set_new_figure(Figure *& temp); //设置
 

@@ -5,8 +5,12 @@
 #include"Circle.h"
 #include"Ellipse.h"
 #include"Polygon.h"
+#include"Bezier.h"
 #include <QCursor>
 #include <QStack>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 myWidget::myWidget(QWidget *parent) : QWidget(parent)
 {
@@ -81,6 +85,22 @@ void myWidget::set_type_to_fillcolor()
     type_of_draw = fillcolor;
 }
 
+void myWidget::set_type_to_Bezier()
+{
+    draw_or_not = true;
+    if(type_of_draw == Bezier && (is_drawing == true || is_editing == true) && cur_figure != nullptr) //
+    {
+        cur_figure->set_Bezier_finished(true); //设置可以画曲线了
+        if(this->is_drawing == true)
+        {
+            this->is_drawing = false;
+            this->is_editing = true; //进入编辑模式
+        }
+        my_paint(temp_draw_area);
+    }
+    type_of_draw = Bezier; //设置画曲线
+}
+
 bool  myWidget::set_new_figure(Figure *& temp)//构造新的图形
 {
     switch (type_of_draw)
@@ -113,6 +133,11 @@ bool  myWidget::set_new_figure(Figure *& temp)//构造新的图形
             case polygon:
             {
                 temp = new myPloygon;
+                break;
+            }
+            case Bezier:
+            {
+                temp = new myBezier;
                 break;
             }
             default:
@@ -175,8 +200,7 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
                 assert(0); //中断
             }
             is_drawing = true; //开始绘图
-
-            if(type_of_draw != polygon)
+            if(type_of_draw != polygon && type_of_draw != Bezier) //非多边形和曲线的绘制方法
             {
                 cur_figure->set_begin_point(start_Pos); //设置起始位置
             }
@@ -205,6 +229,23 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
                     is_editing = true;                      //进入编辑模式
                 }
             }
+            else if(type_of_draw == Bezier) //为曲线的编辑,刚开始按下的时候
+            {
+                if(cur_figure->num_of_set() == 0) //为空集的话,则进行加入
+                {
+                    qDebug()<<"new pos of Bezier 1 ";
+                    cur_figure->set_begin_point(start_Pos);
+                    cur_figure->add_into_set(start_Pos);
+                    *temp_draw_area = *cur_draw_area;
+                     my_paint(temp_draw_area);
+                }
+                else //一直加入就可以了
+                {
+                    cur_figure->add_into_set(start_Pos);  //最后一个点
+                    *temp_draw_area = *cur_draw_area;
+                    my_paint(temp_draw_area);
+                }
+            }
         }
         else if(is_drawing == false && is_editing == true) //编辑模式
         {
@@ -228,33 +269,54 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
                     draw_area.push_back(temp);//保存下来
                 }
                 delete cur_figure; //删除,改写
+                cur_figure = nullptr;
                 qDebug()<<"finish drawing";
             }
         }
         else if(is_drawing == true && is_editing == false)
         {
-            start_Pos = e->pos(); //记录下开始的点的位置
-            assert(type_of_draw == polygon);
-            this->is_polygon = true;
-            if(cur_figure->num_of_set() == 0) //为空集
+            if(type_of_draw == polygon)
             {
-                cur_figure->set_begin_point(start_Pos);
-                cur_figure->add_into_set(start_Pos);
+                start_Pos = e->pos(); //记录下开始的点的位置
+                assert(type_of_draw == polygon);
+                this->is_polygon = true;
+                if(cur_figure->num_of_set() == 0) //为空集
+                {
+                    cur_figure->set_begin_point(start_Pos);
+                    cur_figure->add_into_set(start_Pos);
+                }
+                else if(cur_figure->is_polyon_to(start_Pos) == true) //按下的是一个新的点
+                {
+                    cur_figure->add_into_set(start_Pos);     //则将这个点加入
+                    *temp_draw_area = *cur_draw_area;
+                    my_paint(temp_draw_area);
+                }
+                else //按下的达到了第一个点，结束绘画，进入编辑模式
+                {
+                    cur_figure->add_into_set(start_Pos);
+                    qDebug()<<"begin to edit";
+                    *temp_draw_area = *cur_draw_area;
+                    my_paint(temp_draw_area);
+                    is_drawing = false;
+                    is_editing = true;                      //进入编辑模式
+                }
             }
-            else if(cur_figure->is_polyon_to(start_Pos) == true) //按下的是一个新的点
+            if(type_of_draw == Bezier)
             {
-                cur_figure->add_into_set(start_Pos);     //则将这个点加入
-                *temp_draw_area = *cur_draw_area;
-                 my_paint(temp_draw_area);
-            }
-            else //按下的达到了第一个点，结束绘画，进入编辑模式
-            {
-                cur_figure->add_into_set(start_Pos);
-                qDebug()<<"begin to edit";
-                *temp_draw_area = *cur_draw_area;
-                 my_paint(temp_draw_area);
-                is_drawing = false;
-                is_editing = true;                      //进入编辑模式
+                start_Pos = e->pos(); //记录下开始的点的位置
+                assert(type_of_draw == Bezier);
+                this->is_polygon = true;
+                if(cur_figure->num_of_set() == 0) //为空集
+                {
+                    cur_figure->set_begin_point(start_Pos);
+                    cur_figure->add_into_set(start_Pos);
+                }
+                else if(cur_figure->is_polyon_to(start_Pos) == true) //按下的是一个新的点
+                {
+                    cur_figure->add_into_set(start_Pos);     //则将这个点加入
+                    *temp_draw_area = *cur_draw_area;
+                    my_paint(temp_draw_area);
+                }
             }
         }
     }
@@ -312,6 +374,24 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
                            my_paint(temp_draw_area);
                        }
                 }
+                else if(type_of_draw == Bezier) //进行曲线的绘制，曲线的绘制
+                {
+                    qDebug()<<"Bezier_num:"<<this->cur_figure->num_of_set();
+                    qDebug()<<"end_pos"<<end_Pos.rx() <<" "<<end_Pos.ry();
+                    if(this->cur_figure->num_of_set() == 1) //准备插入下一个点
+                    {
+                             cur_figure->add_into_set(end_Pos); //设置当前位置的结尾
+                             cur_figure->set_end_point(end_Pos);
+                             qDebug()<<"num:"<<this->cur_figure->num_of_set();
+                             my_paint(temp_draw_area);
+                    }
+                    else //更改最后的顶点
+                    {
+                        cur_figure->set_end_point(end_Pos);
+                        qDebug()<<"num:"<<this->cur_figure->num_of_set();
+                        my_paint(temp_draw_area);
+                    }
+                }
                 else
                 {
                     cur_figure->set_end_point(end_Pos); //设置当前位置的结尾
@@ -328,6 +408,7 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
                     painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
                     painter->setPen(pen);					//将QPen对象应用到绘制对象中
                     cur_figure->move_(painter,(end_Pos.rx()-temp_pen_b->rx()),(end_Pos.ry()-temp_pen_b->ry()));
+                    cur_figure->show_edit_func(painter);
                     painter->end();
                     update();
                 }
@@ -337,6 +418,7 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
                     painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
                     painter->setPen(pen);					//将QPen对象应用到绘制对象中
                     cur_figure->rotate_(painter,end_Pos);
+                    cur_figure->show_edit_func(painter);
                     painter->end();
                     update();
                 }
@@ -346,6 +428,7 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
                     painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
                     painter->setPen(pen);					//将QPen对象应用到绘制对象中
                     cur_figure->resize_(painter,end_Pos,is_resizing);
+                    cur_figure->show_edit_func(painter);
                     painter->end();
                     update();
                 }
@@ -385,7 +468,7 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
             update();
         }
     }
-    else if(type_of_draw == polygon) //多边形
+    else if(type_of_draw == polygon ) //多边形
     {
         //判断是否完成画图
         if(is_drawing == true || is_editing == true)
@@ -407,6 +490,17 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
                  cur_figure->show_edit_func(painter); //利用这个函数来进行对与编辑窗口的展示
                  update();
              }
+        }
+    }
+    else if(type_of_draw == Bezier)
+    {
+        if(is_drawing == true || is_editing == true)
+        {
+            if(is_drawing == true && is_editing == false) //完成画图
+            {
+                *temp_draw_area = *cur_draw_area;
+                my_paint(temp_draw_area);
+            }
         }
     }
     else if(is_drawing == true) //绘画结束
@@ -442,7 +536,7 @@ void myWidget::paintEvent(QPaintEvent *)  //画画
     if((is_drawing == true  || is_editing == true)&& type_of_draw != thepen){
         painter.drawPixmap(QPoint(0,0),*temp_draw_area);//-------如果正在或正在编辑绘图，既鼠标点击或者正在移动，画在tempImage上
      }
-    else
+    else if(is_drawing == false && is_editing == false) //进行保存函数
     {
         painter.drawPixmap(QPoint(0,0),*cur_draw_area);//-----------如果鼠标释放，将图保存在image上
     }
@@ -496,9 +590,15 @@ void myWidget:: my_paint (QPixmap *the_iamge){
             }
             case fillcolor:
             {
-                    qDebug()<<"drwa fillcolor"<<endl;
-                    this->fillColor(&this->cur_image,this->pcolor,painter,this->fill_start_pos);
-                    break;
+                 qDebug()<<"drwa fillcolor"<<endl;
+                 this->fillColor(&this->cur_image,this->pcolor,painter,this->fill_start_pos);
+                 break;
+            }
+            case Bezier:
+            {
+                qDebug()<<"drwa Bezier"<<endl;
+                this->cur_figure->draw_(painter,cur_figure->get_start_pos(),cur_figure->get_end_pos());
+                break;
             }
             default:
             {
@@ -506,7 +606,7 @@ void myWidget:: my_paint (QPixmap *the_iamge){
                 break;
             }
     }
-    if(this->type_of_draw == polygon)
+    if(this->type_of_draw == polygon || this->type_of_draw == Bezier)
     {
         if(this->is_editing == true || this->is_drawing == true)
         {
@@ -541,6 +641,11 @@ void myWidget::set_draw_area_back() //撤销
     if((int)draw_area.size() >= 1) //当前超过
     {
         QPixmap *temp = draw_area.back();
+        if(temp == nullptr)
+        {
+            qDebug()<<"错误没有指针";
+            assert(0);
+        }
         *cur_draw_area = *temp;
         update();
     }
@@ -567,8 +672,19 @@ void myWidget::set_pen_color(QString i)//设置笔的颜色
 
  void myWidget::save_pixmap()//保存图片到固定的路径，TOOO:设置到指定的路径
  {
+     QString fileName = QFileDialog::getSaveFileName(nullptr,tr("保存文件"),
+                                                        tr("C:/Users/dell/Desktop/未命名.png"),
+                                                        tr("file(*.png )"));
      qDebug()<<"save";
-     cur_draw_area->save("C:/Users/dell/Desktop/1.png","PNG");
+     if(fileName != nullptr)
+     {
+        cur_draw_area->save(fileName);
+        QMessageBox::information(nullptr,tr("提示"),tr("导出成功!"));
+     }
+     else
+     {
+        QMessageBox::warning(nullptr,tr("警告"),tr("文件名未指定!"),QMessageBox::Ok);
+     }
  }
 
 void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t)//实现填充算法
@@ -611,3 +727,15 @@ void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoin
     }
     stack->clear();
 }
+
+
+void  myWidget:: closeEvent(QCloseEvent *e)
+{
+     QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "内容被修改，是否进行保存？",
+                                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    if(rb == QMessageBox::Yes)
+    {
+        this->save_pixmap();
+    }
+}
+

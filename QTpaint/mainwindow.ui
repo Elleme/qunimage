@@ -171,10 +171,10 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>370</y>
+       <x>50</x>
+       <y>380</y>
        <width>91</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -203,7 +203,7 @@
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>300</y>
+       <y>320</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -222,7 +222,7 @@
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>330</y>
+       <y>350</y>
        <width>87</width>
        <height>22</height>
       </rect>
@@ -289,6 +289,19 @@
       <string>填充</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="Bezier">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>250</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>曲线</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -322,11 +335,11 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
-   <addaction name="actions_T_2"/>
-   <addaction name="actions_S_2"/>
-   <addaction name="action_S_2"/>
+   <addaction name="actions_T"/>
+   <addaction name="action_S"/>
+   <addaction name="actions_S"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -336,96 +349,57 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <widget class="QLabel" name="label">
+    <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
-       <width>81</width>
-       <height>41</height>
+       <y>10</y>
+       <width>95</width>
+       <height>451</height>
       </rect>
      </property>
-     <property name="text">
-      <string>图形维度</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="choose">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>140</y>
-       <width>71</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>选择</string>
-     </property>
-     <property name="icon">
-      <iconset resource="menu.qrc">
-       <normaloff>:/images/mouse.png</normaloff>:/images/mouse.png</iconset>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="to_back">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>210</y>
-       <width>71</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>撤销</string>
-     </property>
-     <property name="icon">
-      <iconset resource="menu.qrc">
-       <normaloff>:/images/back.png</normaloff>:/images/back.png</iconset>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="to_next">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>280</y>
-       <width>71</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>回退</string>
-     </property>
-     <property name="icon">
-      <iconset resource="menu.qrc">
-       <normaloff>:/images/refresh.png</normaloff>:/images/refresh.png</iconset>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="clear">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>350</y>
-       <width>71</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>清屏</string>
-     </property>
-     <property name="icon">
-      <iconset resource="menu.qrc">
-       <normaloff>:/images/clear_screen.png</normaloff>:/images/clear_screen.png</iconset>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPushButton" name="choose">
+        <property name="text">
+         <string>选择</string>
+        </property>
+        <property name="icon">
+         <iconset resource="menu.qrc">
+          <normaloff>:/images/mouse.png</normaloff>:/images/mouse.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="to_back">
+        <property name="text">
+         <string>撤销</string>
+        </property>
+        <property name="icon">
+         <iconset resource="menu.qrc">
+          <normaloff>:/images/back.png</normaloff>:/images/back.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clear">
+        <property name="text">
+         <string>清屏</string>
+        </property>
+        <property name="icon">
+         <iconset resource="menu.qrc">
+          <normaloff>:/images/clear_screen.png</normaloff>:/images/clear_screen.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>
   <action name="actions_T">
    <property name="icon">
     <iconset resource="menu.qrc">
-     <normaloff>:/images/new.png</normaloff>:/images/new.png</iconset>
+     <normaloff>:/images/新建文件.png</normaloff>:/images/新建文件.png</iconset>
    </property>
    <property name="text">
     <string>新建(&amp;N)</string>
@@ -434,7 +408,7 @@
   <action name="actions_S">
    <property name="icon">
     <iconset resource="menu.qrc">
-     <normaloff>:/images/tool.png</normaloff>:/images/tool.png</iconset>
+     <normaloff>:/images/标记.png</normaloff>:/images/标记.png</iconset>
    </property>
    <property name="text">
     <string>使用说明(&amp;S)</string>
@@ -443,34 +417,7 @@
   <action name="action_S">
    <property name="icon">
     <iconset resource="menu.qrc">
-     <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
-   </property>
-   <property name="text">
-    <string>保存(&amp;S)</string>
-   </property>
-  </action>
-  <action name="actions_T_2">
-   <property name="icon">
-    <iconset resource="menu.qrc">
-     <normaloff>:/images/new.png</normaloff>:/images/new.png</iconset>
-   </property>
-   <property name="text">
-    <string>新建(&amp;N)</string>
-   </property>
-  </action>
-  <action name="actions_S_2">
-   <property name="icon">
-    <iconset resource="menu.qrc">
-     <normaloff>:/images/tool.png</normaloff>:/images/tool.png</iconset>
-   </property>
-   <property name="text">
-    <string>使用说明(&amp;S)</string>
-   </property>
-  </action>
-  <action name="action_S_2">
-   <property name="icon">
-    <iconset resource="menu.qrc">
-     <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+     <normaloff>:/images/保存.png</normaloff>:/images/保存.png</iconset>
    </property>
    <property name="text">
     <string>保存(&amp;S)</string>
