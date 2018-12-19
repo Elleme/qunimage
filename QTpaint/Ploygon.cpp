@@ -24,7 +24,7 @@ void myPloygon::draw_line(QPainter * painter,QPoint begin,QPoint end)//每个图
     double de_y = d_y /e; //Y增量
     double temp_x = x_begin;
     double temp_y = y_begin;
-    for(int i = 0; i <= e;i++)
+    for(int i = 0; i <= e; i++)
     {
         QPoint tempPoint((int)(temp_x + 0.5),(int)(temp_y)+0.5); //取最近的整数，而不是向下取整
         painter->drawPoint(tempPoint);
@@ -62,7 +62,7 @@ void myPloygon:: show_edit_func(QPainter * painter)     //显示编辑点
     pen.setStyle((Qt::PenStyle)style);		//设置画笔的格式
     painter->setPen(pen);
     QPoint temp;
-    for(int i = x_min; i < x_max; i++)
+    for(int i = x_min; i < x_max; i+= 3)
     {
         temp.rx() = i;
         temp.ry() = y_min;
@@ -70,7 +70,7 @@ void myPloygon:: show_edit_func(QPainter * painter)     //显示编辑点
         temp.ry() = y_max;
         painter->drawPoint(temp);
     }
-    for(int i = y_min; i < y_max; i++)
+    for(int i = y_min; i < y_max; i+= 3)
     {
         temp.ry() = i;
         temp.rx() = x_min;
@@ -95,7 +95,6 @@ void myPloygon:: draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形
     }
     //确定外接矩形
     this->set_x_y_min_max();//设置最小值和最大值
-
     point_of_resize.clear(); //实现编辑大小
     this->point_of_resize = this->set_of_point; //可编辑的点就是这个点
 

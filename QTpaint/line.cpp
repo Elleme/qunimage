@@ -6,10 +6,12 @@
 myLine::myLine()
 {
     this->type_of_figure = line;
+    this->is_cuting = false;
 }
 
 void myLine::show_edit_func(QPainter * painter)  //显示编辑点
 {
+    if(this->point_begin.rx() < 0) return;
     qDebug()<<"show how to edit";
     QPen pen;
     pen.setWidth(10);					//设置画笔的线宽值
@@ -34,6 +36,7 @@ void myLine::show_edit_func(QPainter * painter)  //显示编辑点
 
 void myLine::draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形进行绘制
 {
+    if(this->point_begin.rx() < 0) return;
     //开始的坐标
     if(this->point_begin != begin || this->point_end != end)
     {
@@ -94,6 +97,44 @@ void myLine::draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形进�
     QPoint temp((this->point_begin.rx()+this->point_end.rx()+0.5) /2,(this->point_begin.ry()+this->point_end.ry()+0.5) /2 );
     this->point_center = temp; //更新中点
     qDebug()<<"center"<<this->point_center.rx()<<" "<<this->point_center.ry();
+    if(this->is_cuting == true)
+    {
+        if(this->point_of_cut.length() <= 1) return;
+        int style = static_cast<int>(Qt::DashDotLine);//设置QPainter的属性
+        QPen pen;
+        pen.setWidth(1);
+        pen.setStyle((Qt::PenStyle)style);		//设置画笔的格式
+        painter->setPen(pen);
+        QPoint temp;
+        int x_min = this->point_of_cut[0].rx();
+        int x_max = this->point_of_cut[1].rx();
+        int y_min = this->point_of_cut[0].ry();
+        int y_max = this->point_of_cut[1].ry();
+        if(x_min > x_max)
+        {
+            int t = x_min; x_min = x_max; x_max =t;
+        }
+        if(y_min >y_max)
+        {
+             int t = y_min; y_min = y_max; y_max =t;
+        }
+        for(int i = x_min; i < x_max; i+= 3)
+        {
+            temp.rx() = i;
+            temp.ry() = y_min;
+            painter->drawPoint(temp);
+            temp.ry() = y_max;
+            painter->drawPoint(temp);
+        }
+        for(int i = y_min; i < y_max; i+= 3)
+        {
+            temp.ry() = i;
+            temp.rx() = x_min;
+            painter->drawPoint(temp);
+            temp.rx() = x_max;
+            painter->drawPoint(temp);
+        }
+    }
 }
 
 bool myLine::move_(QPainter *painter,int change_rx,int change_ry)

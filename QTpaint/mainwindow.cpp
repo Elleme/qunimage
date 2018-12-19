@@ -136,3 +136,8 @@ void MainWindow::on_action_S_triggered()
     cur_widget->save_pixmap();
 }
 
+
+void MainWindow::on_caijian_clicked()
+{
+    cur_widget->set_cuting(); //设置裁剪
+}

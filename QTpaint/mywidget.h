@@ -39,6 +39,7 @@ public:
     void set_pen_color(QString i);//设置笔的颜色
     void save_pixmap();
     void fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t);
+    void set_cuting();
     QPixmap *getPixCopy();
     void closeEvent(QCloseEvent *e);
     //编辑
@@ -63,12 +64,13 @@ private:
     int is_rotating;
     int is_resizing;
     bool is_polygon; //给多边形额外的参数
-
+    bool is_cuting; //是否是正在裁剪的
     //填充需要的变量
     QPoint fill_start_pos;
     QImage cur_image;//填充的image
     QColor pcolor; //填充的颜色
     bool **is_procced; //是否处理过
+
 signals:
 
 public slots:

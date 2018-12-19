@@ -54,6 +54,8 @@ private slots:
 
     void on_Bezier_clicked();
 
+    void on_caijian_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<myWidget*> draw_widget; //设置一个画板

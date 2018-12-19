@@ -3,6 +3,22 @@
 #include<QPainter>
 #include"Figure.h"
 
+struct PointD
+{
+   double x;
+   double y;
+   PointD()
+   {
+       x = 0;
+       y = 0;
+   }
+   PointD(double a, double b)
+   {
+       this->x = a;
+       this->y = b;
+   }
+};
+
 class myBezier : public Figure //从Figure进行继承
 {
 public:
@@ -15,12 +31,12 @@ public:
     void push_into_Bezier(QPoint t);
     void set_x_y_min_max();
     void change_point_by_angle(QPoint &t, double sina,double cosa);
-    void set_is_finished(bool t); //设置是否结束了
-    void drawNodes(QPainter * painter,QVector<QPoint> nodes,double st);
-    void drawBezier(QPainter * painter,QVector<QPoint> nodes);
-    QPoint  bezier_next_Point(QPoint a,QPoint b,double st);
+    void set_is_finished(bool t); //设置是否结束了.
+    void drawNodes(QPainter * painter,QVector<PointD> nodes,double st);
+    void drawBezier(QPainter * painter,QVector<PointD> nodes);
+    PointD  bezier_next_Point(PointD a,PointD b,double st);
 private:
-    void draw_line(QPainter * painter,QPoint begin,QPoint end); //画直线
+    void draw_line(QPainter * painter,QPoint begin,QPoint end,int t); //画直线
     int x_min;
     int y_min;
     int x_max;

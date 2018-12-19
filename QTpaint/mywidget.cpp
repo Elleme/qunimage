@@ -208,13 +208,11 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
             {
                 if(cur_figure->num_of_set() == 0) //为空集
                 {
-                    qDebug()<<"new pos of polygon 1 ";
                     cur_figure->set_begin_point(start_Pos);
                     cur_figure->add_into_set(start_Pos);
                 }
                 else if(cur_figure->is_polyon_to(start_Pos) == true) //按下的是一个新的点
                 {
-                    qDebug()<<"new pos of polygon 2";
                     cur_figure->add_into_set(start_Pos);                    //则将这个点加入
                     *temp_draw_area = *cur_draw_area;
                      my_paint(temp_draw_area);
@@ -260,6 +258,18 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
             qDebug()<<is_moving<<" "<<is_rotating<<" "<<is_resizing;
             if(is_moving == -1 && is_rotating == -1 && is_resizing == -1) //这三个功能都不使用，则进行保存功能
             {
+                if(this->type_of_draw == Bezier)
+                {
+                    this->cur_figure->set_draw_line_or_not(false); //设置为完成
+                }
+                if(this->type_of_draw == line && is_cuting == true )//直线则需要考虑裁剪
+                {
+                    //按下的第一个顶点是矩形的起点
+                    this->cur_figure->set_cuting(true); //可以编辑
+                    this->cur_figure->add_into_cut(start_Pos); //加入点集
+                    my_paint(temp_draw_area); //
+                    return; //立即返回
+                }
                 is_editing = false; //退出编辑模式
                 my_paint(cur_draw_area);
                 delete temp_draw_area;
@@ -434,8 +444,11 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
                 }
                 else
                 {
-                    qDebug()<<"why do nothing?"<<endl;
-                    assert(0);
+                   if(this->type_of_draw == line) //设置最后一个点
+                   {
+                       this->cur_figure->set_end_cut(end_Pos);
+                       my_paint(temp_draw_area); //绘制
+                   }
                 }
             }
          }
@@ -488,6 +501,7 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
                  painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
                  painter->setPen(pen);        			//将QPen对象应用到绘制对象中
                  cur_figure->show_edit_func(painter); //利用这个函数来进行对与编辑窗口的展示
+                 painter->end();
                  update();
              }
         }
@@ -506,6 +520,7 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
     else if(is_drawing == true) //绘画结束
     {
         cur_figure->set_end_point(end_Pos);
+        cur_figure->add_into_set(end_Pos);
         qDebug()<<"begin to edit";
         is_drawing = false;
         is_editing = true; //进入编辑模式
@@ -513,6 +528,7 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
         painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
         painter->setPen(pen);        			//将QPen对象应用到绘制对象中
         cur_figure->show_edit_func(painter); //利用这个函数来进行对与编辑窗口的展示
+        painter->end();
         update();
     }
     else if(is_editing == true) //编辑结束，仍然是编辑模式
@@ -522,6 +538,7 @@ void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
         painter->begin(temp_draw_area);			//在当前PIXMAP进行绘制
         painter->setPen(pen);        			//将QPen对象应用到绘制对象中
         cur_figure->show_edit_func(painter); //利用这个函数来进行对与编辑窗口的展示
+        painter->end();
         update();
     }
     else
@@ -739,3 +756,26 @@ void  myWidget:: closeEvent(QCloseEvent *e)
     }
 }
 
+void  myWidget:: set_cuting()
+{
+    if(this->type_of_draw == line && this->is_editing == true && this->cur_figure != nullptr)//是直线，并且是正在编辑的
+    {
+        if(this->is_cuting == false) //如果不是的话就执行is_cuting操作
+        {
+            this->is_cuting = true;
+        }
+        else //裁剪
+        {
+            this->is_cuting = false;
+            this->cur_figure->set_cuting(false); //不进行
+            bool t = this->cur_figure->cut_line(); //进行裁剪函数
+            if(t == false) //没有了
+            {
+                this->is_editing = false;
+            }
+            qDebug()<<"完成裁剪";
+            *temp_draw_area = *cur_draw_area;
+            my_paint(temp_draw_area);
+        }
+    }
+}
