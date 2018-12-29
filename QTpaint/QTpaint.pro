@@ -4,13 +4,15 @@
 #
 #-------------------------------------------------
 QT +=core gui opengl
-LIBS+=-lopengl32 -lglu32
+RC_ICONS = images/color.ico
+win32:LIBS += -lOpengl32 \
+                -lglu32 \
+                -lglut
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QTpaint
 TEMPLATE = app
-
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -35,7 +37,8 @@ SOURCES += \
     Ellipse.cpp \
     Circle.cpp \
     Ploygon.cpp \
-    Bezier.cpp
+    Bezier.cpp \
+    3DWidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +50,8 @@ HEADERS += \
     Ellipse.h \
     Circle.h \
     Polygon.h \
-    Bezier.h
+    Bezier.h \
+    3DWidget.h
 
 FORMS += \
         mainwindow.ui
@@ -58,4 +62,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    menu.qrc
+    res.qrc

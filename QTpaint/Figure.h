@@ -30,6 +30,8 @@ public:
     void add_into_cut(QPoint t); //将点加入编辑
     void set_end_cut(QPoint t); //最后一个点
     bool cut_line(); //对于直线的函数要实现cut_line
+    void zoom_in_point();
+    void zoom_out_point();
     //虚拟函数，展示继承类相应的属性
     virtual void show_edit_func(QPainter * painter) = 0;     //显示编辑点
     virtual void draw_(QPainter * painter,QPoint centre,QPoint end) = 0; //每个图形进行绘制

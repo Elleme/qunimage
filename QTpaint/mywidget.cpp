@@ -29,7 +29,7 @@ myWidget::myWidget(QWidget *parent) : QWidget(parent)
      is_drawing = false;        //不能画，所以不能够行动
 
       int style = static_cast<int>(Qt::SolidLine);//设置QPainter的属性
-      int weight = 1;
+      int weight = 2;
       pen.setStyle((Qt::PenStyle)style);		//设置画笔的格式
       pen.setWidth(weight);					//设置画笔的线宽值
       pen.setColor(Qt::black);
@@ -41,6 +41,7 @@ myWidget::myWidget(QWidget *parent) : QWidget(parent)
       is_rotating = -1;
       is_resizing = -1;
       is_procced = nullptr;
+      is_closed_by = false;
 }
 
 void myWidget::set_type_to_pen()//设置为笔
@@ -557,6 +558,9 @@ void myWidget::paintEvent(QPaintEvent *)  //画画
     {
         painter.drawPixmap(QPoint(0,0),*cur_draw_area);//-----------如果鼠标释放，将图保存在image上
     }
+    else if(type_of_draw == thepen && is_drawing == true){
+        painter.drawPixmap(QPoint(0,0),*cur_draw_area);
+    }
 }
 
 void myWidget::resizeEvent(QResizeEvent *)//
@@ -578,7 +582,7 @@ void myWidget:: my_paint (QPixmap *the_iamge){
             case thepen:
             {
                 qDebug()<<"draw point"<<endl;
-                draw_pen(painter,end_Pos);
+                draw_pen(painter,start_Pos,end_Pos);
                 break;
             }
             case line:
@@ -746,9 +750,10 @@ void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoin
 }
 
 
-void  myWidget:: closeEvent(QCloseEvent *e)
+void  myWidget::closeEvent(QCloseEvent *e)
 {
-     QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "内容被修改，是否进行保存？",
+     this->is_closed_by = true;
+     QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "是否进行保存？",
                                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     if(rb == QMessageBox::Yes)
     {
@@ -777,5 +782,25 @@ void  myWidget:: set_cuting()
             *temp_draw_area = *cur_draw_area;
             my_paint(temp_draw_area);
         }
+    }
+}
+
+void myWidget::zoom_in()
+{
+    if(this->is_editing == true && this->cur_figure != nullptr)
+    {
+        this->cur_figure->zoom_in_point();
+        *temp_draw_area = *cur_draw_area;
+        my_paint(temp_draw_area);
+    }
+}
+
+void myWidget::zoom_out()
+{
+    if(this->is_editing == true && this->cur_figure != nullptr)
+    {
+        this->cur_figure->zoom_out_point();
+        *temp_draw_area = *cur_draw_area;
+        my_paint(temp_draw_area);
     }
 }

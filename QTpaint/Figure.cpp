@@ -27,6 +27,30 @@ bool is_near(QPoint t,QPoint dest)
     }
 }
 
+void Figure::zoom_in_point()
+{
+    this->point_begin.rx() = this->point_begin.rx() * 2;
+    this->point_begin.ry() = this->point_begin.ry() * 2;
+    this->point_end.rx() = this->point_end.rx() * 2;
+    this->point_end.ry() = this->point_end.ry() * 2;
+    for(int i = 0; i < this->set_of_point.length();i++){
+        this->set_of_point[i].rx() = this->set_of_point[i].rx() * 2;
+        this->set_of_point[i].ry() = this->set_of_point[i].ry() * 2;
+    }
+}
+
+void Figure::zoom_out_point()
+{
+    this->point_begin.rx() = this->point_begin.rx() / 2;
+    this->point_begin.ry() = this->point_begin.ry() / 2;
+    this->point_end.rx() = this->point_end.rx() / 2;
+    this->point_end.ry() = this->point_end.ry() / 2;
+    for(int i = 0; i < this->set_of_point.length();i++){
+        this->set_of_point[i].rx() = this->set_of_point[i].rx() / 2;
+        this->set_of_point[i].ry() = this->set_of_point[i].ry() / 2;
+    }
+}
+
 void Figure::set_Bezier_finished(bool t)
 {
       this->Bezier_finished = t; //是true还是false
@@ -160,7 +184,8 @@ bool Figure::is_polyon_to(QPoint &t) //判断多边形是否为空
 void Figure::add_into_set(QPoint t)
 {
     this->set_of_point.push_back(t);
-    this->point_of_resize.push_back(t);
+    if(this->type_of_figure == Bezier || this->type_of_figure == polygon)
+        this->point_of_resize.push_back(t);
 }
 
 int Figure::num_of_set()

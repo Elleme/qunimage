@@ -11,6 +11,7 @@
 //#include<QtDebug> //debug输出
 #include<QtDebug>
 #include<QMdiSubWindow>
+#include<3DWidget.h>
 
 namespace Ui {
 class MainWindow;
@@ -23,7 +24,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    void refresh_widget();
+    void refresh_3Dwifget();
 private slots:
 
     void on_choose_clicked();
@@ -56,10 +58,21 @@ private slots:
 
     void on_caijian_clicked();
 
+    void on_zoomin_clicked();
+
+    void on_zoomout_clicked();
+
+    void on_actionnew3D_triggered();
+
+    void on_actionclose_triggered();
+
+    void on_read3D_clicked();
+
 private:
     Ui::MainWindow *ui;
-    QVector<myWidget*> draw_widget; //设置一个画板
     myWidget* cur_widget;
+    my_3DWidget * cur_3D_widget;
+    QMdiSubWindow * cur_subwindow;
 };
 
 

@@ -42,9 +42,11 @@ public:
     void set_cuting();
     QPixmap *getPixCopy();
     void closeEvent(QCloseEvent *e);
+    void zoom_in();
+    void zoom_out();
     //编辑
     bool set_new_figure(Figure *& temp); //设置
-
+    bool is_closed_by;
 private:
     myopenGL*s;
     QVector<QPixmap*> draw_area; //用于撤销和清空
