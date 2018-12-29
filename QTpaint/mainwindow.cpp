@@ -176,7 +176,19 @@ void MainWindow::on_read3D_clicked()
 
 void MainWindow::on_actions_S_triggered() //使用说明
 {
-
+    QMessageBox::about(this, tr("关于 QunPaint"),
+               tr("<p>"
+                  "<b>QunPaint</b>是是一个画图程序，该程序使用C++和Qt框架开发"
+                  "是南京大学计算机科学与技术系《图形学》课程的大作业"
+                  "目前的版本实现了画笔、直线、圆、椭圆、多边形、曲线的输入和编辑、平移、放缩等功能，"
+                  "可以选择颜色，也可以填充一块区域的颜色。"
+                  "除此之外，还基于梁友栋算法实现了直线的裁剪。"
+                  "欢迎使用。<br/>"
+                  "有任何疑问可以发送邮件<a href=\"mailto:986300572@qq.com\">986300572@qq.com</a><br/>"
+                  "更多详情，可以到我的github pages上查看<a href=\"https://github.com/qunqunqun\" target=\"_blank\"><b>qunqunqun的个人主页</b></a>"
+                  "<hr/>"
+                  "<p style=\"text-align: right\">戚赟 2018.12</p></p>"
+                 ));
 }
 
 void MainWindow::closeEvent(QCloseEvent *e) //关闭
