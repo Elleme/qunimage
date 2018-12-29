@@ -26,6 +26,7 @@ public:
     ~MainWindow();
     void refresh_widget();
     void refresh_3Dwifget();
+    void closeEvent(QCloseEvent *e);
 private slots:
 
     void on_choose_clicked();
@@ -67,6 +68,8 @@ private slots:
     void on_actionclose_triggered();
 
     void on_read3D_clicked();
+
+    void on_actions_S_triggered();
 
 private:
     Ui::MainWindow *ui;

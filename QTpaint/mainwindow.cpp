@@ -166,11 +166,29 @@ void MainWindow::on_actionclose_triggered()
     this->ui->mdiArea->closeAllSubWindows();
     this->cur_widget = nullptr;
     this->cur_3D_widget = nullptr;
-
 }
 
 void MainWindow::on_read3D_clicked()
 {
     if(cur_3D_widget == nullptr) return;
     this->cur_3D_widget->init();
+}
+
+void MainWindow::on_actions_S_triggered() //使用说明
+{
+
+}
+
+void MainWindow::closeEvent(QCloseEvent *e) //关闭
+{
+    if(this->cur_widget != nullptr)
+    {
+        QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "是否进行退出？",
+                                                         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if(rb == QMessageBox::No)
+        {
+            e->ignore(); //忽略
+        }
+    }
+
 }

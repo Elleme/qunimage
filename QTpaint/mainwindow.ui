@@ -514,7 +514,7 @@
      <normaloff>:/images/标记.png</normaloff>:/images/标记.png</iconset>
    </property>
    <property name="text">
-    <string>使用说明(&amp;S)</string>
+    <string>帮助(&amp;S)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>

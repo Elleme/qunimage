@@ -46,48 +46,59 @@ myWidget::myWidget(QWidget *parent) : QWidget(parent)
 
 void myWidget::set_type_to_pen()//设置为笔
 {
+    if(this->is_drawing == true || this->is_editing == true) return;
     draw_or_not = true;
     type_of_draw = thepen;
 }
 
 void myWidget::set_type_to_none()//设置为无图形
 {
+    if(this->is_drawing == true || this->is_editing == true) return;
     draw_or_not = false;
     type_of_draw = none;
 }
 
 void myWidget::set_type_to_line()//设置为直线
 {
-     draw_or_not = true;
+    if(this->is_drawing == true || this->is_editing == true) return;
+    draw_or_not = true;
     type_of_draw = line;
 }
 
 void myWidget::set_type_to_circle()//设置为圆
 {
-     draw_or_not = true;
+    if(this->is_drawing == true || this->is_editing == true) return;
+    draw_or_not = true;
     type_of_draw = circle;
 }
 
 void myWidget::set_type_to_ellipse()//设置为椭圆
 {
+    if(this->is_drawing == true || this->is_editing == true) return;
      draw_or_not = true;
      type_of_draw = ellipse;
 }
 
 void myWidget::set_type_to_polygon()//设置为多边形
 {
+    if(this->is_drawing == true || this->is_editing == true) return;
     draw_or_not = true;
     type_of_draw = polygon;
 }
 
 void myWidget::set_type_to_fillcolor()
 {
+    if(this->is_drawing == true || this->is_editing == true) return;
     draw_or_not = true;
     type_of_draw = fillcolor;
 }
 
 void myWidget::set_type_to_Bezier()
 {
+    if(this->is_drawing == true || this->is_editing == true)
+    {
+        if(this->type_of_draw != Bezier) return;
+    }
     draw_or_not = true;
     if(type_of_draw == Bezier && (is_drawing == true || is_editing == true) && cur_figure != nullptr) //
     {
@@ -283,6 +294,9 @@ void myWidget::mousePressEvent(QMouseEvent *e) //鼠标按压
                 cur_figure = nullptr;
                 qDebug()<<"finish drawing";
             }
+            else{
+                 this->setCursor(Qt::ClosedHandCursor);
+            }
         }
         else if(is_drawing == true && is_editing == false)
         {
@@ -460,6 +474,7 @@ void myWidget::mouseMoveEvent(QMouseEvent *e)  //鼠标移动
 void myWidget::mouseReleaseEvent(QMouseEvent *e)  //鼠标释放
 {
     //鼠标释放
+    this->setCursor(Qt::ArrowCursor);
     end_Pos = e->pos(); //记录下结束的位置
     //qDebug()<<"end"<<end_Pos.rx()<<" "<<end_Pos.ry()<<endl;
     if(type_of_draw == none)

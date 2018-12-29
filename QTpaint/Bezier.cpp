@@ -38,11 +38,7 @@ void myBezier::draw_line(QPainter * painter,QPoint begin,QPoint end,int t)//每�
     double temp_x = x_begin;
     double temp_y = y_begin;
     QPen pen = painter->pen();
-    if(t == 1)
-    {
-        pen.setColor(Qt::red);
-    }
-    else
+    if(t == 0)
     {
          pen.setColor(Qt::green);
     }
@@ -66,6 +62,7 @@ void myBezier:: show_edit_func(QPainter * painter)     //显示编辑点
     QPen pen;
     pen.setWidth(10);					//设置画笔的线宽值
     pen.setColor(Qt::blue);
+    pen.setCapStyle(Qt::RoundCap);
     painter->setPen(pen);//改变画笔的颜色
     for(int i = 0; i <this->point_of_move.size();i++)
     {
@@ -73,10 +70,14 @@ void myBezier:: show_edit_func(QPainter * painter)     //显示编辑点
     }
     for(int i = 0; i <this->point_of_resize.size();i++)
     {
+        pen.setColor(Qt::red);
+        painter->setPen(pen);//改变画笔的颜色
         painter->drawPoint(point_of_resize[i]);
     }
     for(int i = 0; i <this->point_of_rotate.size();i++)
     {
+        pen.setColor(Qt::green);
+        painter->setPen(pen);//改变画笔的颜色
         painter->drawPoint(point_of_rotate[i]);
     }
     //显示边缘
@@ -107,6 +108,7 @@ void myBezier:: draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形�
 {
         qDebug()<<"start drawing Bezier";
         assert(begin == this->set_of_point[0]);
+        QPen tpen = painter->pen();
         if(this->set_of_point.size() < 2)
         {
             return;
@@ -137,6 +139,7 @@ void myBezier:: draw_(QPainter * painter,QPoint begin,QPoint end)//每个图形�
 
         if(this->Bezier_finished == true) //可以画曲线
         {
+           painter->setPen(tpen);
            if(this->set_of_point.size() >= 2) //至少两个点
            {
                this->BezierNodes.clear(); //清空

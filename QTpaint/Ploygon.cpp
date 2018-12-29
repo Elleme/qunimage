@@ -43,6 +43,7 @@ void myPloygon:: show_edit_func(QPainter * painter)     //显示编辑点
     QPen pen;
     pen.setWidth(10);					//设置画笔的线宽值
     pen.setColor(Qt::blue);
+    pen.setCapStyle(Qt::RoundCap);
     painter->setPen(pen);//改变画笔的颜色
     for(int i = 0; i <this->point_of_move.size();i++)
     {
@@ -50,10 +51,14 @@ void myPloygon:: show_edit_func(QPainter * painter)     //显示编辑点
     }
     for(int i = 0; i <this->point_of_resize.size();i++)
     {
+        pen.setColor(Qt::red);
+        painter->setPen(pen);//改变画笔的颜色
         painter->drawPoint(point_of_resize[i]);
     }
     for(int i = 0; i <this->point_of_rotate.size();i++)
     {
+        pen.setColor(Qt::green);
+        painter->setPen(pen);//改变画笔的颜色
         painter->drawPoint(point_of_rotate[i]);
     }
 

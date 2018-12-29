@@ -29,7 +29,7 @@ void my_3DWidget::paintGL()
     glLoadIdentity();   //恢复初始坐标系
     glTranslatef(offsetX, offsetY, offsetZ); //更改坐标系
     glRotatef(angle, 0,0.5,0); //按角度在旋转
-    gluLookAt(5.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    gluLookAt(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     this->draw3D(); //绘制3D图形
 }
 
