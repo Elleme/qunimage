@@ -174,7 +174,21 @@ void MainWindow::on_read3D_clicked()
     this->cur_3D_widget->init();
 }
 
-void MainWindow::on_actions_S_triggered() //使用说明
+void MainWindow::closeEvent(QCloseEvent *e) //关闭
+{
+    if(this->cur_widget != nullptr)
+    {
+        QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "是否进行退出？",
+                                                         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if(rb == QMessageBox::No)
+        {
+            e->ignore(); //忽略
+        }
+    }
+
+}
+
+void MainWindow::on_actions_H_triggered()
 {
     QMessageBox::about(this, tr("关于 QunPaint"),
                tr("<p>"
@@ -189,18 +203,4 @@ void MainWindow::on_actions_S_triggered() //使用说明
                   "<hr/>"
                   "<p style=\"text-align: right\">戚赟 2018.12</p></p>"
                  ));
-}
-
-void MainWindow::closeEvent(QCloseEvent *e) //关闭
-{
-    if(this->cur_widget != nullptr)
-    {
-        QMessageBox::StandardButton rb = QMessageBox::warning(nullptr, "warning", "是否进行退出？",
-                                                         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-        if(rb == QMessageBox::No)
-        {
-            e->ignore(); //忽略
-        }
-    }
-
 }

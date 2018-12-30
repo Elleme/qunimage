@@ -69,7 +69,7 @@ private slots:
 
     void on_read3D_clicked();
 
-    void on_actions_S_triggered();
+    void on_actions_H_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -244,7 +244,7 @@
     <property name="title">
      <string>帮助(&amp;H)</string>
     </property>
-    <addaction name="actions_S"/>
+    <addaction name="actions_H"/>
    </widget>
    <addaction name="menu_F"/>
    <addaction name="menu_H"/>
@@ -264,7 +264,7 @@
    <addaction name="actionnew3D"/>
    <addaction name="action_S"/>
    <addaction name="actionclose"/>
-   <addaction name="actions_S"/>
+   <addaction name="actions_H"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
@@ -508,13 +508,16 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actions_S">
+  <action name="actions_H">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/images/标记.png</normaloff>:/images/标记.png</iconset>
    </property>
    <property name="text">
-    <string>帮助(&amp;S)</string>
+    <string>帮助(&amp;H)</string>
+   </property>
+   <property name="toolTip">
+    <string>帮助(H)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
@@ -550,10 +553,10 @@
      <normaloff>:/images/垃圾桶1.png</normaloff>:/images/垃圾桶1.png</iconset>
    </property>
    <property name="text">
-    <string>关闭所有视图</string>
+    <string>关闭所有视图(&amp;C)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+D</string>
+    <string>Ctrl+C</string>
    </property>
   </action>
  </widget>

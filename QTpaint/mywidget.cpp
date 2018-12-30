@@ -725,6 +725,10 @@ void myWidget::set_pen_color(QString i)//设置笔的颜色
 
 void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoint t)//实现填充算法
 {
+    QPen init = painter->pen();
+    QPen temp = painter->pen();
+    temp.setWidth(1);
+    painter->setPen(temp);
     QStack<QPoint> *stack = new QStack<QPoint>;
     stack->clear();
     int maxWidth = this->cur_draw_area->width()-1;
@@ -749,12 +753,12 @@ void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoin
         int x = p.x();
         int y = p.y();
 
-        if(img->pixelColor(x,y) != backcolor) continue;   //边界
         if(this->is_procced[x][y] == true) continue;      //已经上色
+        this->is_procced[x][y] = true;
+        if(img->pixelColor(x,y) != backcolor) continue;   //边界
         if(x<=0 || x>=this->cur_draw_area->width()-2) continue;     //超限
         if(y<=0 || y>=this->cur_draw_area->height()-2) continue;    //超限
 
-        this->is_procced[x][y] = true;
         painter->drawPoint(x,y);
         if(!this->is_procced[x][y+1]) stack->push(QPoint(x,y+1));
         if(!this->is_procced[x][y-1]) stack->push(QPoint(x,y-1));
@@ -762,6 +766,7 @@ void myWidget::fillColor(QImage *img, QColor backcolor, QPainter *painter, QPoin
         if(!this->is_procced[x+1][y]) stack->push(QPoint(x+1,y));
     }
     stack->clear();
+    painter->setPen(init);
 }
 
 
